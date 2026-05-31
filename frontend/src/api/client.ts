@@ -44,6 +44,15 @@ class ApiClient {
       return undefined as T;
     }
 
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      throw new Error(
+        response.ok
+          ? 'Invalid server response'
+          : `Server error (${response.status}). Check VITE_API_URL includes /api and the backend is running.`
+      );
+    }
+
     const data = await response.json();
 
     if (!response.ok) {
